@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Certificaciones 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0D1117;
+    --surface: #161B22;
+    --surface2: #1C2330;
+    --border: #30363D;
+    --text: #E6EDF3;
+    --text-muted: #7D8590;
+    --text-dim: #484F58;
+    --green: #2EA043;
+    --green-bright: #3FB950;
+    --green-dim: #1A3A22;
+    --yellow: #D29922;
+    --yellow-dim: #3D2E00;
+    --red: #DA3633;
+    --red-dim: #3D0F0F;
+    --blue: #388BFD;
+    --blue-dim: #0D2043;
+    --orange: #D18616;
+    --orange-dim: #3D2200;
+    --purple: #8957E5;
+    --purple-dim: #1E1340;
+    --accent: #58A6FF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--green-bright);
+    box-shadow: 0 0 8px var(--green-bright);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-dim);
+    border: 1px solid var(--green);
+    color: var(--green-bright);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green-bright);
+    animation: pulse-dot 1.4s ease-in-out infinite;
+  }
+
+  .timestamp {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* MAIN */
+  .main {
+    padding: 28px 32px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  /* KPI ROW */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .kpi:hover { border-color: var(--accent); }
+
+  .kpi-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* GRID */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .grid-full {
+    margin-bottom: 16px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .card-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  .card-body {
+    padding: 16px 18px;
+  }
+
+  /* STATUS BARS */
+  .status-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .status-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    width: 160px;
+    flex-shrink: 0;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .status-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .status-pct {
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* DONUT */
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 8px 0;
+  }
+
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .legend-label { color: var(--text-muted); flex: 1; }
+  .legend-val {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* TABLE */
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .tbl thead th {
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .tbl tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .tbl tbody tr:last-child { border-bottom: none; }
+  .tbl tbody tr:hover { background: var(--surface2); }
+
+  .tbl td {
+    padding: 9px 12px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .tbl td.mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+
+  .badge-green { background: var(--green-dim); color: var(--green-bright); border-color: var(--green); }
+  .badge-yellow { background: var(--yellow-dim); color: var(--yellow); border-color: var(--yellow); }
+  .badge-red { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+  .badge-blue { background: var(--blue-dim); color: var(--blue); border-color: var(--blue); }
+  .badge-orange { background: var(--orange-dim); color: var(--orange); border-color: var(--orange); }
+  .badge-gray { background: var(--surface2); color: var(--text-muted); border-color: var(--border); }
+
+  /* PROGRESS RING */
+  .ring-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .ring-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  /* ALERT */
+  .alert {
+    background: var(--red-dim);
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .alert-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .alert-content { flex: 1; }
+  .alert-title { font-size: 12px; font-weight: 600; color: var(--red); margin-bottom: 3px; }
+  .alert-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+  .alert-warn {
+    background: var(--yellow-dim);
+    border-color: var(--yellow);
+  }
+  .alert-warn .alert-title { color: var(--yellow); }
+
+  /* MINI KPIs */
+  .mini-kpi-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .mini-kpi {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+  }
+
+  .mini-kpi-val {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .mini-kpi-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* FILTER TABS */
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    user-select: none;
+  }
+
+  .tab.active {
+    background: var(--surface2);
+    color: var(--accent);
+    border-color: var(--border);
+  }
+
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* SCROLLABLE TABLE */
+  .table-scroll {
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  .table-scroll::-webkit-scrollbar { width: 5px; }
+  .table-scroll::-webkit-scrollbar-track { background: transparent; }
+  .table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ORGANISM GRID */
+  .org-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .org-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .org-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  .org-count {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .org-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* YEAR COMPARISON */
+  .year-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .year-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .year-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    width: 36px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .year-bar-track {
+    flex: 1;
+    height: 28px;
+    background: var(--surface2);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .year-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--bg);
+    transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .year-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    width: 42px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 12px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-input::placeholder { color: var(--text-dim); }
+  .search-input:focus { border-color: var(--accent); }
+
+  /* INSPECTIONS */
+  .insp-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .insp-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .insp-op {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+
+  .insp-detail {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* VENCIMIENTOS */
+  .venc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .venc-item:last-child { border-bottom: none; }
+
+  .venc-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .venc-info { flex: 1; min-width: 0; }
+
+  .venc-op {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .venc-prod {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .venc-empresa {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    margin-top: 4px;
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--surface);
+    margin-top: 8px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .kpi-row { grid-template-columns: repeat(3, 1fr); }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .org-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 760px) {
+    .main { padding: 16px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ANIMATION */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card, .kpi { animation: fadeIn 0.5s ease both; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo-dot"></div>
+    <div>
+      <div class="header-title">Gestión de Certificaciones</div>
+      <div class="header-sub">Panel Ejecutivo · Seguridad Eléctrica 2026</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      EN VIVO
+    </div>
+    <div class="timestamp" id="clock">--:--:--</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+
+    <div class="kpi" style="animation-delay:0.05s">
+      <div class="kpi-accent" style="background: var(--accent)"></div>
+      <div class="kpi-label">Procesos 2026</div>
+      <div class="kpi-value" style="color:var(--accent)">138</div>
+      <div class="kpi-sub">Total gestionados</div>
+    </div>
+
+    <div class="kpi" style="animation-delay:0.1s">
+      <div class="kpi-accent" style="background: var(--green-bright)"></div>
+      <div class="kpi-label">Finalizados</div>
+      <div class="kpi-value" style="color:var(--green-bright)">62</div>
+      <div class="kpi-sub">44.9% del total</div>
+    </div>
+
+    <div class="kpi" style="animation-delay:0.15s">
+      <div class="kpi-accent" style="background: var(--blue)"></div>
+      <div class="kpi-label">En Proceso</div>
+      <div class="kpi-value" style="color:var(--blue)">46</div>
+      <div class="kpi-sub">33.3% del total</div>
+    </div>
+
+    <div class="kpi" style="animation-delay:0.2s">
+      <div class="kpi-accent" style="background: var(--yellow)"></div>
+      <div class="kpi-label">Pendientes</div>
+      <div class="kpi-value" style="color:var(--yellow)">26</div>
+      <div class="kpi-sub">18.8% del total</div>
+    </div>
+
+    <div class="kpi" style="animation-delay:0.25s">
+      <div class="kpi-accent" style="background: var(--red)"></div>
+      <div class="kpi-label">Obs. / Falla</div>
+      <div class="kpi-value" style="color:var(--red)">3</div>
+      <div class="kpi-sub">Requieren acción</div>
+    </div>
+
+    <div class="kpi" style="animation-delay:0.3s">
+      <div class="kpi-accent" style="background: var(--purple)"></div>
+      <div class="kpi-label">Costo Estimado</div>
+      <div class="kpi-value" style="color:var(--purple); font-size:20px">$18.8K</div>
+      <div class="kpi-sub">USD acumulado 2026</div>
+    </div>
+
+  </div>
+
+  <!-- FILA 2 -->
+  <div class="grid-3">
+
+    <!-- Estado del pipeline -->
+    <div class="card" style="animation-delay:0.35s">
+      <div class="card-header">
+        <span class="card-title">Pipeline de Procesos</span>
+        <span class="card-badge badge-green">2026</span>
+      </div>
+      <div class="card-body">
+        <div class="status-list">
+          <div class="status-item">
+            <span class="status-label">✅ Finalizado</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:44.9%; background:var(--green-bright)" id="bar-fin"></div>
+            </div>
+            <span class="status-count" style="color:var(--green-bright)">62</span>
+            <span class="status-pct">44.9%</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">🔵 En Proceso</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:33.3%; background:var(--blue)" id="bar-proc"></div>
+            </div>
+            <span class="status-count" style="color:var(--blue)">46</span>
+            <span class="status-pct">33.3%</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">🟡 Pendiente</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:18.8%; background:var(--yellow)" id="bar-pend"></div>
+            </div>
+            <span class="status-count" style="color:var(--yellow)">26</span>
+            <span class="status-pct">18.8%</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">🔴 Obs./Falla</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:2.2%; background:var(--red)" id="bar-obs"></div>
+            </div>
+            <span class="status-count" style="color:var(--red)">3</span>
+            <span class="status-pct">2.2%</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">⚫ Cancelado</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:0.7%; background:var(--text-dim)"></div>
+            </div>
+            <span class="status-count" style="color:var(--text-muted)">1</span>
+            <span class="status-pct">0.7%</span>
+          </div>
+        </div>
+
+        <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border)">
+          <div class="section-label">por tipo de operación</div>
+          <div class="status-list">
+            <div class="status-item">
+              <span class="status-label" style="width:180px">Nueva Certificación</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:45.7%; background:var(--accent)"></div>
+              </div>
+              <span class="status-count" style="color:var(--accent)">63</span>
+              <span class="status-pct">45.7%</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label" style="width:180px">Seguimiento Lote</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:37.7%; background:var(--purple)"></div>
+              </div>
+              <span class="status-count" style="color:var(--purple)">52</span>
+              <span class="status-pct">37.7%</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label" style="width:180px">Análisis de Caso</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:8.7%; background:var(--orange)"></div>
+              </div>
+              <span class="status-count" style="color:var(--orange)">12</span>
+              <span class="status-pct">8.7%</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label" style="width:180px">Ampliación Cert.</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:8%; background:var(--green)"></div>
+              </div>
+              <span class="status-count" style="color:var(--green-bright)">11</span>
+              <span class="status-pct">8.0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clientes -->
+    <div class="card" style="animation-delay:0.4s">
+      <div class="card-header">
+        <span class="card-title">Distribución por Cliente</span>
+        <span class="card-badge badge-blue">3 mercados</span>
+      </div>
+      <div class="card-body">
+        <div class="donut-wrap" style="flex-direction:column; align-items:stretch; gap:0">
+          <svg viewBox="0 0 200 130" width="100%" style="margin-bottom:12px">
+            <!-- Background circles -->
+            <circle cx="100" cy="65" r="48" fill="none" stroke="#1C2330" stroke-width="20"/>
+            <!-- IMPALSA CHILE: 66/138=47.8% → 360*0.478=172.2° → arc -->
+            <circle cx="100" cy="65" r="48" fill="none" stroke="#388BFD" stroke-width="20"
+              stroke-dasharray="301.6 633" stroke-dashoffset="0" stroke-linecap="butt"/>
+            <!-- ACO: 39/138=28.3% → 101.9° -->
+            <circle cx="100" cy="65" r="48" fill="none" stroke="#8957E5" stroke-width="20"
+              stroke-dasharray="178.2 756.5" stroke-dashoffset="-301.6" stroke-linecap="butt"/>
+            <!-- AMI: 26/138=18.8% → 67.8° -->
+            <circle cx="100" cy="65" r="48" fill="none" stroke="#2EA043" stroke-width="20"
+              stroke-dasharray="118.7 817" stroke-dashoffset="-479.8" stroke-linecap="butt"/>
+            <!-- Others: 5.1% -->
+            <circle cx="100" cy="65" r="48" fill="none" stroke="#D29922" stroke-width="20"
+              stroke-dasharray="32.1 935.4" stroke-dashoffset="-598.5" stroke-linecap="butt"/>
+
+            <text x="100" y="60" text-anchor="middle" fill="#E6EDF3" font-size="18" font-weight="700" font-family="Inter">138</text>
+            <text x="100" y="75" text-anchor="middle" fill="#7D8590" font-size="9" font-family="Inter">procesos</text>
+          </svg>
+
+          <div class="donut-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--blue)"></div>
+              <span class="legend-label">IMPALSA CHILE</span>
+              <span class="legend-val">66</span>
+              <span style="font-size:11px; color:var(--text-muted); margin-left:6px">47.8%</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--purple)"></div>
+              <span class="legend-label">ACO (Energizer)</span>
+              <span class="legend-val">39</span>
+              <span style="font-size:11px; color:var(--text-muted); margin-left:6px">28.3%</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--green)"></div>
+              <span class="legend-label">AMI (Argentina)</span>
+              <span class="legend-val">26</span>
+              <span style="font-size:11px; color:var(--text-muted); margin-left:6px">18.8%</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--yellow)"></div>
+              <span class="legend-label">Otros (Hidroal/Col.)</span>
+              <span class="legend-val">7</span>
+              <span style="font-size:11px; color:var(--text-muted); margin-left:6px">5.1%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas + Vencimientos -->
+    <div style="display:flex; flex-direction:column; gap:16px">
+
+      <!-- ALERTAS -->
+      <div class="card" style="animation-delay:0.45s">
+        <div class="card-header">
+          <span class="card-title">⚠ Atención Gerencial</span>
+          <span class="card-badge" style="color:var(--red); border-color:var(--red); background:var(--red-dim)">5 items</span>
+        </div>
+        <div class="card-body" style="padding: 12px 14px">
+          <div class="alert">
+            <div class="alert-icon">🔴</div>
+            <div class="alert-content">
+              <div class="alert-title">3 procesos con observación/falla</div>
+              <div class="alert-desc">Ak2603-2 (Amoladora IMPALSA CHILE) + 2 Inspecciones Jun/26. Requieren respuesta técnica y compras.</div>
+            </div>
+          </div>
+          <div class="alert alert-warn">
+            <div class="alert-icon">🟡</div>
+            <div class="alert-content">
+              <div class="alert-title">11 procesos con vencimiento en 14 días</div>
+              <div class="alert-desc">Sierra circular, Jig Saw, Calefacción CHILE y otros — fecha límite 3–10 Jul 2026.</div>
+            </div>
+          </div>
+          <div class="alert alert-warn">
+            <div class="alert-icon">🟡</div>
+            <div class="alert-content">
+              <div class="alert-title">2 inspecciones con reworkeo (Jun 25)</div>
+              <div class="alert-desc">DACD316 (HEHUI) y DAX1400 (TUYING): cambio de componentes y marcado pendiente.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRÓXIMOS VENCIMIENTOS -->
+      <div class="card" style="animation-delay:0.5s">
+        <div class="card-header">
+          <span class="card-title">📅 Próximos Vencimientos</span>
+        </div>
+        <div class="card-body" style="padding: 10px 14px; max-height:200px; overflow-y:auto">
+          <div class="venc-item">
+            <span class="venc-date" style="color:var(--red)">Jun 08</span>
+            <div class="venc-info">
+              <div class="venc-op">CERTI009</div>
+              <div class="venc-prod">Llave de impacto ENZ</div>
+              <div class="venc-empresa">ACO · LENOR</div>
+            </div>
+            <span class="badge badge-red" style="font-size:10px">VENCIDO</span>
+          </div>
+          <div class="venc-item">
+            <span class="venc-date" style="color:var(--red)">Jun 09</span>
+            <div class="venc-info">
+              <div class="venc-op">Ak0202-26</div>
+              <div class="venc-prod">Cargador mini sierra</div>
+              <div class="venc-empresa">IMPALSA CHILE · LENOR</div>
+            </div>
+            <span class="badge badge-red" style="font-size:10px">VENCIDO</span>
+          </div>
+          <div class="venc-item">
+            <span class="venc-date" style="color:var(--yellow)">Jul 03</span>
+            <div class="venc-info">
+              <div class="venc-op">Ak0202-9</div>
+              <div class="venc-prod">Sierra circular batería</div>
+              <div class="venc-empresa">ACO · LENOR</div>
+            </div>
+            <span class="badge badge-yellow" style="font-size:10px">4 DÍAS</span>
+          </div>
+          <div class="venc-item">
+            <span class="venc-date" style="color:var(--yellow)">Jul 03</span>
+            <div class="venc-info">
+              <div class="venc-op">Ak0202-22</div>
+              <div class="venc-prod">Jig Saw 3/4</div>
+              <div class="venc-empresa">ACO · LENOR</div>
+            </div>
+            <span class="badge badge-yellow" style="font-size:10px">4 DÍAS</span>
+          </div>
+          <div class="venc-item">
+            <span class="venc-date" style="color:var(--yellow)">Jul 10</span>
+            <div class="venc-info">
+              <div class="venc-op">64/CHI</div>
+              <div class="venc-prod">Calefacción</div>
+              <div class="venc-empresa">IMPALSA CHILE</div>
+            </div>
+            <span class="badge badge-yellow" style="font-size:10px">11 DÍAS</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FILA 3 -->
+  <div class="grid-2">
+
+    <!-- Organismos -->
+    <div class="card" style="animation-delay:0.55s">
+      <div class="card-header">
+        <span class="card-title">Organismos Coordinados</span>
+        <span class="card-badge badge-blue">5 activos</span>
+      </div>
+      <div class="card-body">
+        <div class="org-grid">
+          <div class="org-card">
+            <div class="org-name">LENOR</div>
+            <div class="org-count" style="color:var(--accent)">95</div>
+            <div class="org-label">procesos</div>
+            <div style="margin-top:8px">
+              <div style="font-size:10px; color:var(--text-muted); margin-bottom:3px">Chile</div>
+              <div class="bar-track"><div class="bar-fill" style="width:68.8%; background:var(--accent)"></div></div>
+            </div>
+          </div>
+          <div class="org-card">
+            <div class="org-name">PLW</div>
+            <div class="org-count" style="color:var(--purple)">31</div>
+            <div class="org-label">procesos</div>
+            <div style="margin-top:8px">
+              <div style="font-size:10px; color:var(--text-muted); margin-bottom:3px">Argentina</div>
+              <div class="bar-track"><div class="bar-fill" style="width:22.5%; background:var(--purple)"></div></div>
+            </div>
+          </div>
+          <div class="org-card">
+            <div class="org-name">CERTPRO</div>
+            <div class="org-count" style="color:var(--green-bright)">7</div>
+            <div class="org-label">procesos</div>
+            <div style="margin-top:8px">
+              <div style="font-size:10px; color:var(--text-muted); margin-bottom:3px">Chile</div>
+              <div class="bar-track"><div class="bar-fill" style="width:5.1%; background:var(--green)"></div></div>
+            </div>
+          </div>
+          <div class="org-card">
+            <div class="org-name">BUREAU / INTERTEK</div>
+            <div class="org-count" style="color:var(--yellow)">5</div>
+            <div class="org-label">procesos</div>
+            <div style="margin-top:8px">
+              <div style="font-size:10px; color:var(--text-muted); margin-bottom:3px">Otros mercados</div>
+              <div class="bar-track"><div class="bar-fill" style="width:3.6%; background:var(--yellow)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparativo histórico -->
+    <div class="card" style="animation-delay:0.6s">
+      <div class="card-header">
+        <span class="card-title">Evolución Histórica</span>
+        <span class="card-badge badge-gray">2024 – 2026</span>
+      </div>
+      <div class="card-body">
+        <div class="year-bars">
+          <div class="year-row">
+            <span class="year-tag">2024</span>
+            <div class="year-bar-track">
+              <div class="year-bar-fill" style="width:100%; background:var(--text-dim)">242 completados</div>
+            </div>
+            <span class="year-val" style="color:var(--text-muted)">242</span>
+          </div>
+          <div class="year-row">
+            <span class="year-tag">2025</span>
+            <div class="year-bar-track">
+              <div class="year-bar-fill" style="width:88%; background:var(--text-muted)">213 completados</div>
+            </div>
+            <span class="year-val" style="color:var(--text-muted)">213</span>
+          </div>
+          <div class="year-row">
+            <span class="year-tag">2026</span>
+            <div class="year-bar-track">
+              <div class="year-bar-fill" style="width:57%; background:var(--accent)">138 en curso</div>
+            </div>
+            <span class="year-val" style="color:var(--accent)">138</span>
+          </div>
+        </div>
+
+        <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border)">
+          <div class="section-label">Reworks detectados 2026</div>
+          <div class="status-list">
+            <div class="status-item">
+              <span class="status-label">Sin rework</span>
+              <div class="bar-track"><div class="bar-fill" style="width:77%; background:var(--green)"></div></div>
+              <span class="status-count" style="color:var(--green-bright)">45</span>
+              <span class="status-pct">77%</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Rework Marcado</span>
+              <div class="bar-track"><div class="bar-fill" style="width:15.5%; background:var(--yellow)"></div></div>
+              <span class="status-count" style="color:var(--yellow)">9</span>
+              <span class="status-pct">15.5%</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Marc. + Constructivo</span>
+              <div class="bar-track"><div class="bar-fill" style="width:5.2%; background:var(--orange)"></div></div>
+              <span class="status-count" style="color:var(--orange)">3</span>
+              <span class="status-pct">5.2%</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Solo Constructivo</span>
+              <div class="bar-track"><div class="bar-fill" style="width:1.7%; background:var(--red)"></div></div>
+              <span class="status-count" style="color:var(--red)">1</span>
+              <span class="status-pct">1.7%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABLA COMPLETA -->
+  <div class="card grid-full" style="animation-delay:0.65s">
+    <div class="card-header">
+      <span class="card-title">Detalle de Procesos 2026</span>
+      <span class="card-badge badge-gray" id="table-count">138 registros</span>
+    </div>
+    <div class="filter-tabs">
+      <div class="tab active" onclick="filterTable('all', this)">Todos (138)</div>
+      <div class="tab" onclick="filterTable('FINALIZADO', this)">Finalizados (62)</div>
+      <div class="tab" onclick="filterTable('EN PROCESO', this)">En Proceso (46)</div>
+      <div class="tab" onclick="filterTable('PENDIENTE', this)">Pendientes (26)</div>
+      <div class="tab" onclick="filterTable('OBSERVADO / FALLA', this)">Obs./Falla (3)</div>
+    </div>
+    <div class="search-wrap">
+      <input class="search-input" type="text" placeholder="Buscar por OP, empresa, producto, modelo..." oninput="searchTable(this.value)">
+    </div>
+    <div class="table-scroll">
+      <table class="tbl" id="main-table">
+        <thead>
+          <tr>
+            <th>OP</th>
+            <th>Empresa</th>
+            <th>Producto</th>
+            <th>Modelo</th>
+            <th>Tipo</th>
+            <th>Organismo</th>
+            <th>Estado</th>
+            <th>Finalización</th>
+            <th>Rework</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INSPECCIONES -->
+  <div class="card grid-full" style="animation-delay:0.7s">
+    <div class="card-header">
+      <span class="card-title">Inspecciones de Fábrica — Junio 2026</span>
+      <span class="card-badge badge-red">2 observadas</span>
+    </div>
+    <div class="card-body">
+      <div class="insp-item">
+        <div>
+          <div class="insp-date">25 Jun 2026</div>
+          <div style="font-size:10px; color:var(--text-muted)">in2506-1</div>
+        </div>
+        <div>
+          <div class="insp-op">DACD316 — Proveedor: HEHUI</div>
+          <div class="insp-detail">PI: 26GBR008 · País: Chile</div>
+          <div class="insp-detail" style="margin-top:4px">Causa: <strong style="color:var(--yellow)">Cambio de componentes</strong> · Acción: Solicitud documental · Informado a: Compras y seguimiento</div>
+        </div>
+        <span class="badge badge-yellow">OBSERVADO</span>
+      </div>
+      <div class="insp-item">
+        <div>
+          <div class="insp-date">25 Jun 2026</div>
+          <div style="font-size:10px; color:var(--text-muted)">in2506-2</div>
+        </div>
+        <div>
+          <div class="insp-op">DAX1400 — Proveedor: TUYING</div>
+          <div class="insp-detail">PI: Ei251218-Ch1300cj02 · País: Chile</div>
+          <div class="insp-detail" style="margin-top:4px">Causa: <strong style="color:var(--red)">Cambio de componentes y marcado</strong> · Acción: Reworkeo · Informado a: Compras y diseño</div>
+        </div>
+        <span class="badge badge-red">REWORKEO</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Dashboard conectado a <strong>Google Sheets</strong> · Se refresca cada 60 seg</span>
+  <span id="last-update" style="color:var(--text-muted)">Conectando...</span>
+  <span><span id="footer-clock"></span></span>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbzMS4GDiFgnrfvq6KeYfVjP8t23yJl3G2l3r9RrXksF9f53p7E41vtY3MOMyagp6U-r/exec";
+const REFRESH_INTERVAL = 60000; // 60 segundos
+
+// Índices de columna en la hoja 2026 (fila 1 = headers)
+// OP=0, OC_ORG=1, NRO_CERT=2, FECHA_OP=3, EMPRESA=4, MUESTRA=5,
+// FINALIZACION=6, TIPO=7, PRODUCTO=8, MODELO=9, ESTADO=10,
+// ORGANISMO=11, ARTES=12, OBS=13, REWORK=14, INFORMADO=15, COSTO=16
+const COL = { op:0, empresa:4, producto:8, modelo:9, tipo:7, organismo:11, estado:10, finalizacion:6, rework:14, costo:16 };
+
+let data = [];
+let lastUpdate = null;
+
+// ─── FETCH DESDE GOOGLE SHEETS ────────────────────────────────────────────────
+function showStatus(msg, type) {
+  // type: 'loading' | 'ok' | 'error'
+  const dot = document.querySelector('.logo-dot');
+  const badge = document.querySelector('.live-badge');
+  if (type === 'loading') {
+    dot.style.background = '#D29922';
+    dot.style.boxShadow = '0 0 8px #D29922';
+    badge.style.color = '#D29922';
+    badge.style.borderColor = '#D29922';
+    badge.style.background = '#3D2E00';
+    badge.querySelector('div').style.background = '#D29922';
+    badge.childNodes[1].textContent = ' ' + msg;
+  } else if (type === 'ok') {
+    dot.style.background = 'var(--green-bright)';
+    dot.style.boxShadow = '0 0 8px var(--green-bright)';
+    badge.style.color = 'var(--green-bright)';
+    badge.style.borderColor = 'var(--green)';
+    badge.style.background = 'var(--green-dim)';
+    badge.querySelector('div').style.background = 'var(--green-bright)';
+    badge.childNodes[1].textContent = ' EN VIVO';
+  } else {
+    dot.style.background = 'var(--red)';
+    dot.style.boxShadow = '0 0 8px var(--red)';
+    badge.style.color = 'var(--red)';
+    badge.style.borderColor = 'var(--red)';
+    badge.style.background = 'var(--red-dim)';
+    badge.querySelector('div').style.background = 'var(--red)';
+    badge.childNodes[1].textContent = ' SIN CONEXIÓN';
+  }
+}
+
+function parseRow(row) {
+  const str = v => (v !== null && v !== undefined) ? String(v).trim() : '';
+  const finRaw = str(row[COL.finalizacion]);
+  // Fechas pueden venir como "2026-06-08T00:00:00.000Z" o ya como string
+  let fin = '';
+  if (finRaw && finRaw !== 'NaN' && finRaw !== '') {
+    const d = new Date(finRaw);
+    if (!isNaN(d.getTime())) {
+      fin = d.toISOString().slice(0, 10);
+    } else {
+      fin = finRaw; // ej: "FALLO"
+    }
+  }
+  return {
+    op:          str(row[COL.op]),
+    empresa:     str(row[COL.empresa]),
+    producto:    str(row[COL.producto]),
+    modelo:      str(row[COL.modelo]),
+    tipo:        str(row[COL.tipo]),
+    organismo:   str(row[COL.organismo]),
+    estado:      str(row[COL.estado]).toUpperCase(),
+    finalizacion: fin,
+    rework:      str(row[COL.rework]),
+    costo:       parseFloat(row[COL.costo]) || 0,
+  };
+}
+
+async function loadFromSheet() {
+  showStatus('ACTUALIZANDO', 'loading');
+  try {
+    const res = await fetch(SHEET_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const raw = await res.json();
+
+    // raw es array de arrays. Fila 0 puede ser vacía, fila 1 = headers → datos desde fila 2
+    const rows = raw.slice(2).map(parseRow).filter(r => r.op !== '');
+    data = rows;
+    lastUpdate = new Date();
+
+    updateKPIs();
+    renderTable();
+    showStatus('EN VIVO', 'ok');
+    document.getElementById('last-update').textContent =
+      'Última actualización: ' + lastUpdate.toLocaleTimeString('es-AR');
+  } catch (err) {
+    showStatus('SIN CONEXIÓN', 'error');
+    console.error('Error cargando Sheet:', err);
+    // Si no hay datos aún, mostrar mensaje en tabla
+    if (data.length === 0) {
+      document.getElementById('table-body').innerHTML =
+        `<tr><td colspan="9" style="text-align:center; padding:24px; color:var(--red)">
+          ⚠ No se pudo conectar al Google Sheet. Verificá que el script esté publicado como app web.
+        </td></tr>`;
+    }
+  }
+}
+
+function updateKPIs() {
+  const total     = data.length;
+  const fin       = data.filter(r => r.estado === 'FINALIZADO').length;
+  const enProceso = data.filter(r => r.estado === 'EN PROCESO').length;
+  const pend      = data.filter(r => r.estado === 'PENDIENTE').length;
+  const obs       = data.filter(r => r.estado === 'OBSERVADO / FALLA').length;
+  const costo     = data.reduce((s, r) => s + r.costo, 0);
+
+  const pct = (n, t) => t > 0 ? ((n/t)*100).toFixed(1) : '0.0';
+
+  // KPI values
+  const kpis = document.querySelectorAll('.kpi-value');
+  if (kpis[0]) kpis[0].textContent = total;
+  if (kpis[1]) kpis[1].textContent = fin;
+  if (kpis[2]) kpis[2].textContent = enProceso;
+  if (kpis[3]) kpis[3].textContent = pend;
+  if (kpis[4]) kpis[4].textContent = obs;
+  if (kpis[5]) kpis[5].textContent = '$' + (costo/1000).toFixed(1) + 'K';
+
+  // KPI subtitles
+  const subs = document.querySelectorAll('.kpi-sub');
+  if (subs[1]) subs[1].textContent = pct(fin, total) + '% del total';
+  if (subs[2]) subs[2].textContent = pct(enProceso, total) + '% del total';
+  if (subs[3]) subs[3].textContent = pct(pend, total) + '% del total';
+
+  // Tabs
+  const tabs = document.querySelectorAll('.tab');
+  if (tabs[0]) tabs[0].textContent = `Todos (${total})`;
+  if (tabs[1]) tabs[1].textContent = `Finalizados (${fin})`;
+  if (tabs[2]) tabs[2].textContent = `En Proceso (${enProceso})`;
+  if (tabs[3]) tabs[3].textContent = `Pendientes (${pend})`;
+  if (tabs[4]) tabs[4].textContent = `Obs./Falla (${obs})`;
+}
+
+// ─── TABLE RENDER ──────────────────────────────────────────────────────────────
+let currentFilter = 'all';
+let currentSearch = '';
+
+function getBadge(estado) {
+  const map = {
+    'FINALIZADO': 'badge-green',
+    'EN PROCESO': 'badge-blue',
+    'PENDIENTE': 'badge-yellow',
+    'OBSERVADO / FALLA': 'badge-red',
+    'CANCELADO': 'badge-gray'
+  };
+  return map[estado] || 'badge-gray';
+}
+
+function getReworkBadge(rework) {
+  if (!rework || rework === '') return '';
+  if (rework === 'NO' || rework === 'NO APLICA') return `<span class="badge badge-gray">${rework}</span>`;
+  return `<span class="badge badge-orange">${rework}</span>`;
+}
+
+function renderTable() {
+  const tbody = document.getElementById('table-body');
+  let rows = data;
+
+  if (currentFilter !== 'all') {
+    rows = rows.filter(r => r.estado === currentFilter);
+  }
+
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    rows = rows.filter(r =>
+      r.op.toLowerCase().includes(q) ||
+      r.empresa.toLowerCase().includes(q) ||
+      r.producto.toLowerCase().includes(q) ||
+      r.modelo.toLowerCase().includes(q)
+    );
+  }
+
+  document.getElementById('table-count').textContent = `${rows.length} registros`;
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="mono">${r.op}</td>
+      <td>${r.empresa}</td>
+      <td>${r.producto}</td>
+      <td class="mono" style="font-size:11px; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${r.modelo || '—'}</td>
+      <td style="font-size:11px; color:var(--text-muted)">${r.tipo}</td>
+      <td><span class="badge badge-gray">${r.organismo || '—'}</span></td>
+      <td><span class="badge ${getBadge(r.estado)}">${r.estado}</span></td>
+      <td class="mono" style="${r.finalizacion && r.finalizacion <= '2026-06-29' && r.estado !== 'FINALIZADO' ? 'color:var(--red)' : 'color:var(--text-muted)'}">${r.finalizacion || '—'}</td>
+      <td>${getReworkBadge(r.rework)}</td>
+    </tr>
+  `).join('');
+}
+
+function filterTable(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderTable();
+}
+
+function searchTable(val) {
+  currentSearch = val;
+  renderTable();
+}
+
+// ─── CLOCK ────────────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const str = now.toLocaleTimeString('es-AR', { hour12: false });
+  document.getElementById('clock').textContent = str;
+  document.getElementById('footer-clock').textContent =
+    now.toLocaleDateString('es-AR') + ' ' + str;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadFromSheet();
+setInterval(loadFromSheet, REFRESH_INTERVAL);
+</script>
+</body>
+</html>
