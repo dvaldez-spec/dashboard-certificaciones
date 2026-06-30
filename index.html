@@ -872,56 +872,12 @@
     <div class="card" style="animation-delay:0.4s">
       <div class="card-header">
         <span class="card-title">Distribución por Cliente</span>
-        <span class="card-badge badge-blue">3 mercados</span>
+        <span class="card-badge badge-blue" id="pie-mercados">3 mercados</span>
       </div>
       <div class="card-body">
-        <div class="donut-wrap" style="flex-direction:column; align-items:stretch; gap:0">
-          <svg viewBox="0 0 200 130" width="100%" style="margin-bottom:12px">
-            <!-- Background circles -->
-            <circle cx="100" cy="65" r="48" fill="none" stroke="#1C2330" stroke-width="20"/>
-            <!-- IMPALSA CHILE: 66/138=47.8% → 360*0.478=172.2° → arc -->
-            <circle cx="100" cy="65" r="48" fill="none" stroke="#388BFD" stroke-width="20"
-              stroke-dasharray="301.6 633" stroke-dashoffset="0" stroke-linecap="butt"/>
-            <!-- ACO: 39/138=28.3% → 101.9° -->
-            <circle cx="100" cy="65" r="48" fill="none" stroke="#8957E5" stroke-width="20"
-              stroke-dasharray="178.2 756.5" stroke-dashoffset="-301.6" stroke-linecap="butt"/>
-            <!-- AMI: 26/138=18.8% → 67.8° -->
-            <circle cx="100" cy="65" r="48" fill="none" stroke="#2EA043" stroke-width="20"
-              stroke-dasharray="118.7 817" stroke-dashoffset="-479.8" stroke-linecap="butt"/>
-            <!-- Others: 5.1% -->
-            <circle cx="100" cy="65" r="48" fill="none" stroke="#D29922" stroke-width="20"
-              stroke-dasharray="32.1 935.4" stroke-dashoffset="-598.5" stroke-linecap="butt"/>
-
-            <text x="100" y="60" text-anchor="middle" fill="#E6EDF3" font-size="18" font-weight="700" font-family="Inter">138</text>
-            <text x="100" y="75" text-anchor="middle" fill="#7D8590" font-size="9" font-family="Inter">procesos</text>
-          </svg>
-
-          <div class="donut-legend">
-            <div class="legend-item">
-              <div class="legend-dot" style="background:var(--blue)"></div>
-              <span class="legend-label">IMPALSA CHILE</span>
-              <span class="legend-val">66</span>
-              <span style="font-size:11px; color:var(--text-muted); margin-left:6px">47.8%</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:var(--purple)"></div>
-              <span class="legend-label">ACO (Energizer)</span>
-              <span class="legend-val">39</span>
-              <span style="font-size:11px; color:var(--text-muted); margin-left:6px">28.3%</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:var(--green)"></div>
-              <span class="legend-label">AMI (Argentina)</span>
-              <span class="legend-val">26</span>
-              <span style="font-size:11px; color:var(--text-muted); margin-left:6px">18.8%</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:var(--yellow)"></div>
-              <span class="legend-label">Otros (Hidroal/Col.)</span>
-              <span class="legend-val">7</span>
-              <span style="font-size:11px; color:var(--text-muted); margin-left:6px">5.1%</span>
-            </div>
-          </div>
+        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+          <canvas id="pieChart" width="180" height="180" style="flex-shrink:0"></canvas>
+          <div class="donut-legend" id="pie-legend" style="flex:1; min-width:120px"></div>
         </div>
       </div>
     </div>
@@ -1299,6 +1255,7 @@ async function loadFromSheet() {
     lastUpdate = new Date();
 
     updateKPIs();
+    drawPieChart();
     renderTable();
     showStatus('EN VIVO', 'ok');
     document.getElementById('last-update').textContent =
@@ -1316,7 +1273,79 @@ async function loadFromSheet() {
   }
 }
 
-function updateKPIs() {
+function drawPieChart() {
+  const canvas = document.getElementById('pieChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2, r = W * 0.42;
+
+  // Agrupar por empresa
+  const counts = {};
+  data.forEach(d => {
+    const e = d.empresa || 'Otros';
+    counts[e] = (counts[e] || 0) + 1;
+  });
+
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const COLORS = ['#388BFD','#8957E5','#2EA043','#D29922','#DA3633','#58A6FF','#D18616'];
+
+  // Ordenar de mayor a menor
+  const slices = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([label, val], i) => ({ label, val, color: COLORS[i % COLORS.length] }));
+
+  // Dibujar torta
+  ctx.clearRect(0, 0, W, H);
+  let startAngle = -Math.PI / 2;
+
+  slices.forEach(s => {
+    const angle = (s.val / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, startAngle + angle);
+    ctx.closePath();
+    ctx.fillStyle = s.color;
+    ctx.fill();
+    ctx.strokeStyle = '#0D1117';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Etiqueta % si es suficientemente grande
+    const pct = (s.val / total * 100);
+    if (pct > 6) {
+      const midAngle = startAngle + angle / 2;
+      const lx = cx + Math.cos(midAngle) * r * 0.65;
+      const ly = cy + Math.sin(midAngle) * r * 0.65;
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 11px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pct.toFixed(1) + '%', lx, ly);
+    }
+
+    startAngle += angle;
+  });
+
+  // Leyenda
+  const legend = document.getElementById('pie-legend');
+  if (legend) {
+    legend.innerHTML = slices.map(s => `
+      <div class="legend-item">
+        <div class="legend-dot" style="background:${s.color}; border-radius:3px"></div>
+        <span class="legend-label">${s.label}</span>
+        <span class="legend-val">${s.val}</span>
+        <span style="font-size:11px; color:var(--text-muted); margin-left:6px">${(s.val/total*100).toFixed(1)}%</span>
+      </div>
+    `).join('');
+  }
+
+  // Actualizar badge
+  const empresas = Object.keys(counts).length;
+  const badge = document.getElementById('pie-mercados');
+  if (badge) badge.textContent = empresas + ' clientes';
+}
+
   const total     = data.length;
   const fin       = data.filter(r => r.estado === 'FINALIZADO').length;
   const enProceso = data.filter(r => r.estado === 'EN PROCESO').length;
