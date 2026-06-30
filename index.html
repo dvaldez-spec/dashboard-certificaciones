@@ -8,7 +8,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
   :root {
-    --bg: #0D1117; 
+    --bg: #0D1117;
     --surface: #161B22;
     --surface2: #1C2330;
     --border: #30363D;
@@ -1346,6 +1346,7 @@ function drawPieChart() {
   if (badge) badge.textContent = empresas + ' clientes';
 }
 
+function updateKPIs() {
   const total     = data.length;
   const fin       = data.filter(r => r.estado === 'FINALIZADO').length;
   const enProceso = data.filter(r => r.estado === 'EN PROCESO').length;
