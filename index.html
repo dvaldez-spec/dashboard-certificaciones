@@ -932,39 +932,8 @@
 
         <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border)">
           <div class="section-label">por tipo de operación</div>
-          <div class="status-list">
-            <div class="status-item">
-              <span class="status-label" style="width:180px">Nueva Certificación</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:45.7%; background:var(--accent)"></div>
-              </div>
-              <span class="status-count" style="color:var(--accent)">63</span>
-              <span class="status-pct">45.7%</span>
-            </div>
-            <div class="status-item">
-              <span class="status-label" style="width:180px">Seguimiento Lote</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:37.7%; background:var(--purple)"></div>
-              </div>
-              <span class="status-count" style="color:var(--purple)">52</span>
-              <span class="status-pct">37.7%</span>
-            </div>
-            <div class="status-item">
-              <span class="status-label" style="width:180px">Análisis de Caso</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:8.7%; background:var(--orange)"></div>
-              </div>
-              <span class="status-count" style="color:var(--orange)">12</span>
-              <span class="status-pct">8.7%</span>
-            </div>
-            <div class="status-item">
-              <span class="status-label" style="width:180px">Ampliación Cert.</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:8%; background:var(--green)"></div>
-              </div>
-              <span class="status-count" style="color:var(--green-bright)">11</span>
-              <span class="status-pct">8.0%</span>
-            </div>
+          <div class="status-list" id="tipo-breakdown">
+            <div style="font-size:12px; color:var(--text-muted)">Cargando…</div>
           </div>
         </div>
       </div>
@@ -1130,7 +1099,7 @@
     <div class="card" style="animation-delay:0.6s">
       <div class="card-header">
         <span class="card-title">Evolución Histórica</span>
-        <span class="card-badge badge-gray">2024 – 2026</span>
+        <span class="card-badge badge-gray" title="2024 y 2025 son referencia fija, no vienen del Sheet">2024 – 2026</span>
       </div>
       <div class="card-body">
         <div class="year-bars">
@@ -1151,39 +1120,17 @@
           <div class="year-row">
             <span class="year-tag">2026</span>
             <div class="year-bar-track">
-              <div class="year-bar-fill" style="width:57%; background:var(--accent)">138 en curso</div>
+              <div class="year-bar-fill" id="year-2026-bar" style="width:0%; background:var(--accent)"></div>
             </div>
-            <span class="year-val" style="color:var(--accent)">138</span>
+            <span class="year-val" id="year-2026-val" style="color:var(--accent)">–</span>
           </div>
         </div>
+        <div style="font-size:10px; color:var(--text-dim); margin-top:10px">2024 y 2025 son referencia fija · 2026 se actualiza con el Sheet</div>
 
         <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border)">
           <div class="section-label">Reworks detectados 2026</div>
-          <div class="status-list">
-            <div class="status-item">
-              <span class="status-label">Sin rework</span>
-              <div class="bar-track"><div class="bar-fill" style="width:77%; background:var(--green)"></div></div>
-              <span class="status-count" style="color:var(--green-bright)">45</span>
-              <span class="status-pct">77%</span>
-            </div>
-            <div class="status-item">
-              <span class="status-label">Rework Marcado</span>
-              <div class="bar-track"><div class="bar-fill" style="width:15.5%; background:var(--yellow)"></div></div>
-              <span class="status-count" style="color:var(--yellow)">9</span>
-              <span class="status-pct">15.5%</span>
-            </div>
-            <div class="status-item">
-              <span class="status-label">Marc. + Constructivo</span>
-              <div class="bar-track"><div class="bar-fill" style="width:5.2%; background:var(--orange)"></div></div>
-              <span class="status-count" style="color:var(--orange)">3</span>
-              <span class="status-pct">5.2%</span>
-            </div>
-            <div class="status-item">
-              <span class="status-label">Solo Constructivo</span>
-              <div class="bar-track"><div class="bar-fill" style="width:1.7%; background:var(--red)"></div></div>
-              <span class="status-count" style="color:var(--red)">1</span>
-              <span class="status-pct">1.7%</span>
-            </div>
+          <div class="status-list" id="rework-breakdown">
+            <div style="font-size:12px; color:var(--text-muted)">Cargando…</div>
           </div>
         </div>
       </div>
@@ -1343,6 +1290,7 @@ async function loadFromSheet() {
 
     updateKPIs();
     updateExecSummary();
+    updateBreakdowns();
     drawPieChart();
     drawCostBreakdown();
     renderTable();
@@ -1490,6 +1438,80 @@ function updateExecSummary() {
   if (elObs) elObs.textContent = obsResueltas;
   if (elCompras) elCompras.textContent = compras;
   if (elDiseno) elDiseno.textContent = diseno;
+}
+
+function renderBarList(containerId, items, total) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  const visible = items.filter(i => i.count > 0);
+  if (visible.length === 0) {
+    wrap.innerHTML = '<div style="font-size:12px; color:var(--text-muted)">Sin datos.</div>';
+    return;
+  }
+  wrap.innerHTML = visible.map(i => {
+    const pct = total > 0 ? (i.count / total * 100) : 0;
+    return `
+      <div class="status-item">
+        <span class="status-label" style="width:180px">${i.label}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct.toFixed(1)}%; background:${i.color}"></div></div>
+        <span class="status-count" style="color:${i.color}">${i.count}</span>
+        <span class="status-pct">${pct.toFixed(1)}%</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// Recalcula "por tipo de operación", "Reworks detectados" y la barra 2026 en vivo desde el Sheet.
+function updateBreakdowns() {
+  const total = data.length;
+
+  // Por tipo de operación (incluye EXTENSION, que antes no se mostraba)
+  const tipoBuckets = [
+    { key: 'NUEVA CERTIFICACION', label: 'Nueva Certificación', color: 'var(--accent)' },
+    { key: 'SEGUIMIENTO LOTE', label: 'Seguimiento Lote', color: 'var(--purple)' },
+    { key: 'ANALISIS CASO', label: 'Análisis de Caso', color: 'var(--orange)' },
+    { key: 'AMPLIACION CERTIFICADO', label: 'Ampliación Cert.', color: 'var(--green)' },
+    { key: 'EXTENSION', label: 'Extensión', color: 'var(--blue)' },
+  ];
+  const tipoCounts = tipoBuckets.map(b => ({
+    label: b.label, color: b.color,
+    count: data.filter(r => r.tipo === b.key).length
+  }));
+  const tipoClasificados = tipoCounts.reduce((s, b) => s + b.count, 0);
+  const tipoOtros = total - tipoClasificados;
+  if (tipoOtros > 0) tipoCounts.push({ label: 'Otro / sin clasificar', color: 'var(--text-dim)', count: tipoOtros });
+  renderBarList('tipo-breakdown', tipoCounts, total);
+
+  // Reworks: se clasifica según el contenido real de la columna REWORK
+  const buckets = { sinRework: 0, marcado: 0, marcConstructivo: 0, soloConstructivo: 0, otro: 0 };
+  data.forEach(r => {
+    const rw = r.rework || '';
+    const hasMarcado = rw.includes('MARCADO');
+    const hasConstructivo = rw.includes('CONSTRUCTIVO');
+    if (!rw || rw === 'NO' || rw === 'NO APLICA') buckets.sinRework++;
+    else if (hasMarcado && hasConstructivo) buckets.marcConstructivo++;
+    else if (hasMarcado) buckets.marcado++;
+    else if (hasConstructivo) buckets.soloConstructivo++;
+    else buckets.otro++;
+  });
+  const reworkItems = [
+    { label: 'Sin rework', color: 'var(--green)', count: buckets.sinRework },
+    { label: 'Rework Marcado', color: 'var(--yellow)', count: buckets.marcado },
+    { label: 'Marc. + Constructivo', color: 'var(--orange)', count: buckets.marcConstructivo },
+    { label: 'Solo Constructivo', color: 'var(--red)', count: buckets.soloConstructivo },
+  ];
+  if (buckets.otro > 0) reworkItems.push({ label: 'Otro', color: 'var(--text-dim)', count: buckets.otro });
+  renderBarList('rework-breakdown', reworkItems, total);
+
+  // Barra 2026 (2024/2025 quedan fijos como referencia histórica)
+  const yearBar = document.getElementById('year-2026-bar');
+  const yearVal = document.getElementById('year-2026-val');
+  if (yearVal) yearVal.textContent = total;
+  if (yearBar) {
+    const pct = Math.min(100, (total / 242) * 100);
+    yearBar.style.width = pct.toFixed(0) + '%';
+    yearBar.textContent = total + ' en curso';
+  }
 }
 
 function updateKPIs() {
