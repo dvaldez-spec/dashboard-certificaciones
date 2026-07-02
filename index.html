@@ -660,27 +660,46 @@
     color: var(--text-dim);
   }
 
-  /* EXEC SUMMARY GRID */
+  /* EXEC SUMMARY — minimal, tool-shop accent */
+  .exec-stripe {
+    height: 3px;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--yellow) 0px, var(--yellow) 8px,
+      var(--bg) 8px, var(--bg) 16px
+    );
+    opacity: 0.55;
+  }
+
   .exec-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .exec-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px 14px;
     text-align: center;
+    padding: 22px 16px 4px;
+    position: relative;
+  }
+
+  .exec-card + .exec-card {
+    border-left: 1px solid var(--border);
+  }
+
+  .exec-icon {
+    width: 22px;
+    height: 22px;
+    margin: 0 auto 14px;
+    color: var(--text-dim);
+    stroke: currentColor;
   }
 
   .exec-val {
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin-bottom: 6px;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 8px;
     font-family: 'DM Mono', monospace;
   }
 
@@ -688,10 +707,13 @@
     font-size: 11px;
     color: var(--text-muted);
     line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
-  @media (max-width: 1100px) {
-    .exec-grid { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 760px) {
+    .exec-grid { grid-template-columns: 1fr; }
+    .exec-card + .exec-card { border-left: none; border-top: 1px solid var(--border); }
   }
 
   /* SECTION LABEL */
@@ -804,6 +826,55 @@
       <div class="kpi-sub">USD acumulado 2026</div>
     </div>
 
+  </div>
+
+  <!-- RESUMEN EJECUTIVO -->
+  <div class="card grid-full" style="animation-delay:0.32s">
+    <div class="exec-stripe"></div>
+    <div class="card-header">
+      <span class="card-title">Resumen Ejecutivo 2026</span>
+      <span class="card-badge badge-gray">Acumulado</span>
+    </div>
+    <div class="card-body" style="padding:0 18px 18px">
+      <div class="exec-grid">
+        <div class="exec-card">
+          <svg class="exec-icon" style="color:var(--orange)" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+          <div class="exec-val" style="color:var(--orange)">17</div>
+          <div class="exec-label">Observaciones técnicas resueltas</div>
+        </div>
+        <div class="exec-card">
+          <svg class="exec-icon" style="color:var(--red)" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+          <div class="exec-val" style="color:var(--red)">12</div>
+          <div class="exec-label">Intervenciones con Compras</div>
+        </div>
+        <div class="exec-card">
+          <svg class="exec-icon" style="color:var(--accent)" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+          </svg>
+          <div class="exec-val" style="color:var(--accent)">9</div>
+          <div class="exec-label">Intervenciones con Diseño</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COSTO ACUMULADO POR CLIENTE -->
+  <div class="card grid-full" style="animation-delay:0.34s">
+    <div class="card-header">
+      <span class="card-title">Costo Acumulado por Cliente</span>
+      <span class="card-badge badge-purple" id="cost-total">$0</span>
+    </div>
+    <div class="card-body">
+      <div class="status-list" id="cost-breakdown">
+        <div style="font-size:12px; color:var(--text-muted)">Cargando…</div>
+      </div>
+    </div>
   </div>
 
   <!-- FILA 2 -->
@@ -1187,63 +1258,6 @@
           <div class="insp-detail" style="margin-top:4px">Causa: <strong style="color:var(--red)">Cambio de componentes y marcado</strong> · Acción: Reworkeo · Informado a: Compras y diseño</div>
         </div>
         <span class="badge badge-red">REWORKEO</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- COSTO ACUMULADO POR CLIENTE -->
-  <div class="card grid-full" style="animation-delay:0.75s">
-    <div class="card-header">
-      <span class="card-title">Costo Acumulado por Cliente</span>
-      <span class="card-badge badge-purple" id="cost-total">$0</span>
-    </div>
-    <div class="card-body">
-      <div class="status-list" id="cost-breakdown">
-        <div style="font-size:12px; color:var(--text-muted)">Cargando…</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RESUMEN EJECUTIVO -->
-  <div class="card grid-full" style="animation-delay:0.8s">
-    <div class="card-header">
-      <span class="card-title">Resumen Ejecutivo 2026</span>
-      <span class="card-badge badge-gray">Acumulado</span>
-    </div>
-    <div class="card-body">
-      <div class="exec-grid">
-        <div class="exec-card">
-          <div class="exec-val" style="color:var(--accent)">82</div>
-          <div class="exec-label">Procesos gestionados</div>
-        </div>
-        <div class="exec-card">
-          <div class="exec-val" style="color:var(--green-bright)">48</div>
-          <div class="exec-label">Nuevas certificaciones</div>
-        </div>
-        <div class="exec-card">
-          <div class="exec-val" style="color:var(--purple)">34</div>
-          <div class="exec-label">Seguimientos de lote</div>
-        </div>
-        <div class="exec-card">
-          <div class="exec-val" style="color:var(--blue)">5</div>
-          <div class="exec-label">Organismos coordinados</div>
-        </div>
-        <div class="exec-card">
-          <div class="exec-val" style="color:var(--yellow)">3</div>
-          <div class="exec-label">Mercados<br><span style="font-size:10px; color:var(--text-dim); font-weight:400">Argentina, Chile, Colombia</span></div>
-        </div>
-        <div class="exec-card">
-          <div class="exec-val" style="color:var(--orange)">17</div>
-          <div class="exec-label">Observaciones técnicas resueltas</div>
-        </div>
-        <div class="exec-card">
-          <div class="exec-val" style="color:var(--red)">12</div>
-          <div class="exec-label">Intervenciones con Compras</div>
-        </div>
-        <div class="exec-card">
-          <div class="exec-val" style="color:var(--text)">9</div>
-          <div class="exec-label">Intervenciones con Diseño</div>
-        </div>
       </div>
     </div>
   </div>
