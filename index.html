@@ -1335,10 +1335,15 @@ async function loadFromSheet() {
   } catch (err) {
     showStatus('SIN CONEXIÓN', 'error');
     console.error('Error cargando Sheet:', err);
+    const lastUpdateEl = document.getElementById('last-update');
+    if (lastUpdateEl) {
+      lastUpdateEl.textContent = '⚠ No se pudo conectar con el Google Sheet (ver consola, F12)';
+      lastUpdateEl.style.color = 'var(--red)';
+    }
     if (data.length === 0) {
       document.getElementById('table-body').innerHTML =
         `<tr><td colspan="9" style="text-align:center; padding:24px; color:var(--red)">
-          ⚠ No se pudo conectar al Google Sheet. Verificá que el script esté publicado como app web.
+          ⚠ No se pudo conectar al Google Sheet. Verificá que el script esté publicado como app web con acceso "Cualquier usuario".
         </td></tr>`;
     }
   }
